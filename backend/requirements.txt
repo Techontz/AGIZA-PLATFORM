@@ -1,0 +1,3 @@
+# Entry point for platforms that auto-detect Python from requirements.txt (Railway/Railpack, Heroku, ...).
+# Production dependencies live in requirements/prod.txt; use requirements/dev.txt for local work.
+-r requirements/prod.txt

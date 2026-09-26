@@ -174,6 +174,19 @@ Backend
 5. Run `gunicorn config.wsgi --workers 3 --bind 127.0.0.1:8000` behind nginx (TLS, `client_max_body_size 50m`).
 6. Schedule `evaluate_tag_rules` (hourly) and `send_due_notifications` (every 5 minutes).
 
+Railway (backend service)
+1. Create a service from this repo and set **Settings → Source → Root Directory** to `backend`.
+   `backend/requirements.txt`, `backend/.python-version` and `backend/railway.json` let Railpack detect the
+   Python app, pin Python 3.12 and run migrations, `collectstatic` and gunicorn on `$PORT` at start.
+2. Add a PostgreSQL database in the same project; Railway injects `DATABASE_URL` when you reference it
+   (`DATABASE_URL=${{Postgres.DATABASE_URL}}`).
+3. Service variables: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, `DJANGO_NUM_PROXIES=1`,
+   `DJANGO_ALLOWED_HOSTS=<service>.up.railway.app,healthcheck.railway.app` (plus any custom domain),
+   `DJANGO_CSRF_TRUSTED_ORIGINS=https://<service>.up.railway.app`, `MEDIA_ROOT=/data/media` (attach a
+   volume at `/data`, or configure S3), `BOOTSTRAP_ADMIN_*`, and channel credentials as needed.
+4. Generate a public domain under **Settings → Networking**; the health check hits `/api/health/`.
+5. Create the first admin once from the Railway shell: `python manage.py bootstrap_admin`.
+
 Frontend
 1. `pnpm install --frozen-lockfile && pnpm build` → standalone server in `.next/standalone`.
 2. Environment: `DJANGO_API_URL` (internal URL of Django), `SESSION_COOKIE_SECURE=true`, `NODE_ENV=production`.
