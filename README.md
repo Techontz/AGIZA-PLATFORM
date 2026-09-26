@@ -176,7 +176,8 @@ Backend
 
 Railway (backend service)
 1. Create a service from this repo and set **Settings → Source → Root Directory** to `backend`.
-   `backend/requirements.txt`, `backend/.python-version` and `backend/railway.json` let Railpack detect the
+   `backend/requirements.txt` (a flat copy of base + prod, keep it in sync), `backend/.python-version` and
+   `backend/railway.json` let Railpack detect the
    Python app, pin Python 3.12 and run migrations, `collectstatic` and gunicorn on `$PORT` at start.
 2. Add a PostgreSQL database in the same project; Railway injects `DATABASE_URL` when you reference it
    (`DATABASE_URL=${{Postgres.DATABASE_URL}}`).
@@ -184,7 +185,8 @@ Railway (backend service)
    `DJANGO_ALLOWED_HOSTS=<service>.up.railway.app,healthcheck.railway.app` (plus any custom domain),
    `DJANGO_CSRF_TRUSTED_ORIGINS=https://<service>.up.railway.app`, `MEDIA_ROOT=/data/media` (attach a
    volume at `/data`, or configure S3), `BOOTSTRAP_ADMIN_*`, and channel credentials as needed.
-4. Generate a public domain under **Settings → Networking**; the health check hits `/api/health/`.
+4. Generate a public domain under **Settings → Networking**; the health check hits `/api/health/`. Leave the
+   Railway pre-deploy command empty: `railway.json` already runs migrations and `collectstatic` at start.
 5. Create the first admin once from the Railway shell: `python manage.py bootstrap_admin`.
 
 Frontend
