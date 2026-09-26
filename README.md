@@ -187,7 +187,8 @@ Railway (backend service)
    volume at `/data`, or configure S3), `BOOTSTRAP_ADMIN_*`, and channel credentials as needed.
 4. Generate a public domain under **Settings → Networking**; the health check hits `/api/health/`. Leave the
    Railway pre-deploy command empty: `railway.json` already runs migrations and `collectstatic` at start.
-5. Create the first admin once from the Railway shell: `python manage.py bootstrap_admin`.
+5. The first Top Admin is created automatically at start from `BOOTSTRAP_ADMIN_*` (idempotent; the password must
+   pass the validators: 10+ characters, not common, not all digits). Watch the deploy logs for "Top Admin ... created".
 
 Frontend
 1. `pnpm install --frozen-lockfile && pnpm build` → standalone server in `.next/standalone`.
